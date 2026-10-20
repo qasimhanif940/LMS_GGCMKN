@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Library Catalog — Govt. Graduate College Mamukanjan</title>
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .catalog-header {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
+    color: #fff; padding: 18px 14px; padding-top: calc(18px + var(--safe-top));
+    text-align: center;
+  }
+  .catalog-header .logo-wrap { margin-bottom: 8px; }
+  .catalog-header .logo-wrap img { width: 52px; height: 52px; }
+  .catalog-header h1 { font-size: 19px; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.3px; }
+  .catalog-header p { font-size: 12px; opacity: 0.85; }
+  .catalog-toolbar {
+    display: flex; gap: 8px; align-items: center; margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .catalog-toolbar .search-bar { flex: 1; min-width: 200px; margin: 0; }
+  .catalog-toolbar select.form-control { width: auto; min-width: 140px; }
+  .catalog-stats {
+    background: var(--primary-50);
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    font-size: 12px; color: var(--primary-dark);
+    margin-bottom: 14px;
+    display: flex; gap: 16px; flex-wrap: wrap;
+    border: 1px solid var(--border);
+  }
+  .catalog-stats span { display: flex; align-items: center; gap: 5px; font-weight: 600; }
+  .catalog-stats .num { color: var(--accent-dark); font-size: 14px; }
+  .book-detail-modal .meta-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px;
+  }
+  .book-detail-modal .meta-grid > div { padding: 6px 0; border-bottom: 1px dashed var(--border); }
+  @media (max-width: 480px) { .book-detail-modal .meta-grid { grid-template-columns: 1fr; } }
+  .footer-note {
+    text-align: center; padding: 24px 14px; font-size: 11px; color: var(--muted);
+    border-top: 1px solid var(--border); margin-top: 24px;
+  }
+  .footer-note a { color: var(--primary); text-decoration: none; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header class="catalog-header">
+  <div class="logo-wrap"><img src="assets/logo.svg" alt="Logo"></div>
+  <h1>Govt. Graduate College Mamukanjan</h1>
+  <p>Library Catalog · Code 331604</p>
+</header>
+
+<main style="max-width:1100px;margin:0 auto;padding:14px;">
+
+  <div class="catalog-stats" id="catalog-stats">
+    <span>📚 Total titles: <span class="num" id="stat-titles">—</span></span>
+    <span>📖 Total copies: <span class="num" id="stat-copies">—</span></span>
+    <span>✅ Available: <span class="num" id="stat-avail">—</span></span>
+  </div>
+
+  <div class="catalog-toolbar">
+    <div class="search-bar">
+      <input type="text" id="search" placeholder="Search by title, author, or library book no…">
+    </div>
+    <select class="form-control" id="filter-category">
+      <option value="">All categories</option>
+    </select>
+    <select class="form-control" id="sort-by">
+      <option value="title">Sort: Title A→Z</option>
+      <option value="title-desc">Sort: Title Z→A</option>
+      <option value="libno">Sort: Library No ↑</option>
+      <option value="libno-desc">Sort: Library No ↓</option>
+      <option value="avail">Sort: Most available</option>
+    </select>
+  </div>
+
+  <div class="book-grid" id="book-grid"></div>
+
+  <div class="empty-state hidden" id="empty-state">
+    <div class="icon">📭</div>
+    <h3>No books found</h3>
+    <p>Try a different search or filter.</p>
+  </div>
+
+  <div class="footer-note">
+    <p>Library Management System · Govt. Graduate College Mamukanjan</p>
+    <p style="margin-top:4px;">Librarian? <a href="login.html">Login here</a></p>
+  </div>
+
+</main>
+
+<script src="js/supabase-client.js"></script>
+<script src="js/catalog.js"></script>
+</body>
+</html>

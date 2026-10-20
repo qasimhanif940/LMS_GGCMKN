@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Background circle -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f4c3a"/>
+      <stop offset="100%" stop-color="#1a6849"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f0c75a"/>
+      <stop offset="100%" stop-color="#d4a017"/>
+    </linearGradient>
+  </defs>
+  <circle cx="32" cy="32" r="30" fill="url(#bgGrad)"/>
+
+  <!-- Open book -->
+  <g transform="translate(32 34)">
+    <!-- Left page -->
+    <path d="M -2 -14 L -2 12 L -18 14 L -18 -12 Z"
+          fill="#ffffff" stroke="#062a20" stroke-width="1"/>
+    <!-- Right page -->
+    <path d="M 2 -14 L 2 12 L 18 14 L 18 -12 Z"
+          fill="#fbf8f3" stroke="#062a20" stroke-width="1"/>
+    <!-- Spine highlight -->
+    <line x1="0" y1="-14" x2="0" y2="12" stroke="#d4a017" stroke-width="1.5"/>
+
+    <!-- Page lines left -->
+    <line x1="-15" y1="-7"  x2="-5" y2="-8"  stroke="#9a9a9a" stroke-width="0.8"/>
+    <line x1="-15" y1="-3"  x2="-5" y2="-4"  stroke="#9a9a9a" stroke-width="0.8"/>
+    <line x1="-15" y1="1"   x2="-5" y2="0"   stroke="#9a9a9a" stroke-width="0.8"/>
+    <line x1="-15" y1="5"   x2="-5" y2="4"   stroke="#9a9a9a" stroke-width="0.8"/>
+
+    <!-- Page lines right -->
+    <line x1="5" y1="-8"  x2="15" y2="-7"  stroke="#9a9a9a" stroke-width="0.8"/>
+    <line x1="5" y1="-4"  x2="15" y2="-3"  stroke="#9a9a9a" stroke-width="0.8"/>
+    <line x1="5" y1="0"   x2="15" y2="1"   stroke="#9a9a9a" stroke-width="0.8"/>
+    <line x1="5" y1="4"   x2="15" y2="5"   stroke="#9a9a9a" stroke-width="0.8"/>
+  </g>
+
+  <!-- Top small star/leaf accent -->
+  <path d="M 32 8 L 33.5 12 L 37.5 12.5 L 34.5 15 L 35.5 19 L 32 16.5 L 28.5 19 L 29.5 15 L 26.5 12.5 L 30.5 12 Z"
+        fill="url(#goldGrad)"/>
+</svg>

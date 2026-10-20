@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Library Dashboard — GGCMKN</title>
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <div class="logo"><img src="assets/logo.svg" alt="Logo"></div>
+    <div class="titles">
+      <h1>Library Admin</h1>
+      <div class="subtitle">Govt. Graduate College Mamukanjan</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <div class="user-badge">
+      <span class="dot"></span>
+      <span id="user-email">librarian</span>
+    </div>
+    <button class="btn ghost sm" data-logout title="Logout">⎋</button>
+  </div>
+</header>
+
+<nav class="desktop-nav">
+  <button data-section="dashboard"   class="active"><span>📊</span> Dashboard</button>
+  <button data-section="students">  <span>🎓</span> Students</button>
+  <button data-section="books">      <span>📚</span> Books</button>
+  <button data-section="circulation"><span>🔄</span> Issue / Return</button>
+  <button data-section="fines">      <span>💰</span> Fines</button>
+  <button data-section="audit">       <span>📜</span> Audit Log</button>
+  <button data-section="settings">   <span>⚙️</span> Settings</button>
+  <a href="catalog.html" target="_blank" style="margin-left:auto;display:flex;align-items:center;padding:12px 18px;color:var(--muted);font-size:13px;font-weight:600;text-decoration:none;">
+    <span>👁️</span> View public catalog
+  </a>
+</nav>
+
+<main>
+
+  <!-- =========== DASHBOARD =========== -->
+  <section class="section active" id="section-dashboard">
+    <div class="stats-bar" id="stats-bar">
+      <div class="stat-card"><div class="num" id="stat-total-books">—</div><div class="label">Book Titles</div></div>
+      <div class="stat-card"><div class="num" id="stat-total-copies">—</div><div class="label">Total Copies</div></div>
+      <div class="stat-card success"><div class="num" id="stat-avail-copies">—</div><div class="label">Available</div></div>
+      <div class="stat-card warning"><div class="num" id="stat-active">—</div><div class="label">Active Borrows</div></div>
+      <div class="stat-card danger"><div class="num" id="stat-overdue">—</div><div class="label">Overdue</div></div>
+      <div class="stat-card"><div class="num" id="stat-students">—</div><div class="label">Students</div></div>
+      <div class="stat-card danger"><div class="num" id="stat-fines">—</div><div class="label">Unpaid Fines</div></div>
+    </div>
+
+    <div class="section-header">
+      <h2><span class="icon">🔄</span> Active Borrows</h2>
+      <div class="actions">
+        <button class="btn secondary sm" id="btn-refresh-active">↻ Refresh</button>
+      </div>
+    </div>
+    <div class="card" style="padding:0;">
+      <div class="table-wrap">
+        <table class="data" id="table-active">
+          <thead>
+            <tr>
+              <th>Copy ID</th><th>Book</th><th>Student</th><th>Roll</th>
+              <th>Borrowed</th><th>Due</th><th>Days Left</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="8" class="text-muted text-center" style="padding:24px;">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========== STUDENTS =========== -->
+  <section class="section" id="section-students">
+    <div class="section-header">
+      <h2><span class="icon">🎓</span> Students</h2>
+      <div class="actions">
+        <button class="btn accent" id="btn-add-student">+ Add Student</button>
+      </div>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="search-students" placeholder="Search by name, roll no, or user ID…">
+    </div>
+    <div class="card" style="padding:0;">
+      <div class="table-wrap">
+        <table class="data" id="table-students">
+          <thead>
+            <tr>
+              <th>User ID</th><th>Roll No</th><th>Name</th><th>Program</th>
+              <th>Level</th><th>Gender</th><th>Phone</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="9" class="text-muted text-center" style="padding:24px;">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========== BOOKS =========== -->
+  <section class="section" id="section-books">
+    <div class="section-header">
+      <h2><span class="icon">📚</span> Books</h2>
+      <div class="actions">
+        <button class="btn accent" id="btn-add-book">+ Add Book</button>
+      </div>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="search-books" placeholder="Search by title, author, library book no, or category…">
+    </div>
+    <div class="card" style="padding:0;">
+      <div class="table-wrap">
+        <table class="data" id="table-books">
+          <thead>
+            <tr>
+              <th>Book ID</th><th>Lib No</th><th>Title</th><th>Author</th>
+              <th>Category</th><th>Avail / Total</th><th>Almirah</th><th>Shelf</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="9" class="text-muted text-center" style="padding:24px;">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========== CIRCULATION =========== -->
+  <section class="section" id="section-circulation">
+    <div class="section-header">
+      <h2><span class="icon">🔄</span> Issue / Return / Renew</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-header">📝 Issue a Book</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Student <span class="req">*</span></label>
+          <div class="suggest-wrap">
+            <input type="text" id="issue-student" class="form-control"
+                   placeholder="Type name, roll no, or STU-001…"
+                   autocomplete="off">
+            <div class="suggest-list" id="suggest-student"></div>
+          </div>
+        </div>
+        <div class="form-group full">
+          <label>Book <span class="req">*</span></label>
+          <div class="suggest-wrap">
+            <input type="text" id="issue-book" class="form-control"
+                   placeholder="Type title, library book no, or BOOK-001…"
+                   autocomplete="off">
+            <div class="suggest-list" id="suggest-book"></div>
+          </div>
+        </div>
+        <div class="form-group full">
+          <button class="btn lg block accent" id="btn-issue">Issue Book</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">↩️ Return / Renew (click on an active borrow above)</div>
+      <p class="text-muted" style="font-size:12px;">
+        To return or renew, click <strong>Return</strong> or <strong>Renew</strong> next to the borrow in the
+        Active Borrows table on the Dashboard. Or paste a Copy ID below:
+      </p>
+      <div class="flex gap-2 mt-2">
+        <input type="text" id="return-copy-id" class="form-control" placeholder="e.g. BOOK-001-C1">
+        <button class="btn danger" id="btn-return-manual">Return</button>
+        <button class="btn secondary" id="btn-renew-manual">Renew</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========== FINES =========== -->
+  <section class="section" id="section-fines">
+    <div class="section-header">
+      <h2><span class="icon">💰</span> Fines</h2>
+      <div class="actions">
+        <button class="btn secondary sm" id="btn-filter-fines-unpaid">Show unpaid only</button>
+        <button class="btn secondary sm" id="btn-filter-fines-all">Show all</button>
+      </div>
+    </div>
+    <div class="card" style="padding:0;">
+      <div class="table-wrap">
+        <table class="data" id="table-fines">
+          <thead>
+            <tr>
+              <th>Fine ID</th><th>Student</th><th>User ID</th><th>Book</th>
+              <th>Amount</th><th>Days Late</th><th>Date Levied</th><th>Status</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="9" class="text-muted text-center" style="padding:24px;">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========== AUDIT LOG =========== -->
+  <section class="section" id="section-audit">
+    <div class="section-header">
+      <h2><span class="icon">📜</span> Audit Log</h2>
+      <div class="actions">
+        <button class="btn secondary sm" id="btn-refresh-audit">↻ Refresh</button>
+      </div>
+    </div>
+    <div class="card" style="padding:0;">
+      <div class="table-wrap">
+        <table class="data" id="table-audit">
+          <thead>
+            <tr><th>Timestamp</th><th>User</th><th>Action</th><th>Detail</th></tr>
+          </thead>
+          <tbody><tr><td colspan="4" class="text-muted text-center" style="padding:24px;">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========== SETTINGS =========== -->
+  <section class="section" id="section-settings">
+    <div class="section-header">
+      <h2><span class="icon">⚙️</span> Settings</h2>
+    </div>
+    <div class="card" style="max-width:560px;">
+      <div class="card-header">Library Rules</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Fine per day (Rs.)</label>
+          <input type="number" min="0" id="set-fine-per-day" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Borrow limit (books)</label>
+          <input type="number" min="1" id="set-borrow-limit" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Due days</label>
+          <input type="number" min="1" id="set-due-days" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Reminder days before due</label>
+          <input type="number" min="0" id="set-reminder-days" class="form-control">
+        </div>
+        <div class="form-group full">
+          <label>Librarian email (for daily summary)</label>
+          <input type="email" id="set-librarian-email" class="form-control" placeholder="librarian@ggcmkn.com">
+        </div>
+      </div>
+      <div class="flex gap-2 mt-3">
+        <button class="btn accent" id="btn-save-settings">Save Settings</button>
+        <button class="btn secondary" id="btn-reload-settings">Reload</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<nav class="bottom-nav">
+  <button data-section="dashboard" class="active"><span class="nav-icon">📊</span>Home</button>
+  <button data-section="students"> <span class="nav-icon">🎓</span>Students</button>
+  <button data-section="books">    <span class="nav-icon">📚</span>Books</button>
+  <button data-section="circulation"><span class="nav-icon">🔄</span>Circ</button>
+  <button data-section="fines">    <span class="nav-icon">💰</span>Fines</button>
+  <button data-section="audit">    <span class="nav-icon">📜</span>Log</button>
+  <button data-section="settings"> <span class="nav-icon">⚙️</span>Set</button>
+</nav>
+
+<script src="js/supabase-client.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/students.js"></script>
+<script src="js/books.js"></script>
+<script src="js/circulation.js"></script>
+<script src="js/fines.js"></script>
+<script src="js/audit.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
