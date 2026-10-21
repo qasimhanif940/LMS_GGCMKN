@@ -152,33 +152,21 @@ function openBookModal(existingBookId) {
     try {
       UI.showLoading(isEdit ? "Saving…" : "Adding…");
       if (isEdit) {
-        // Update book row (basic fields only — copies handled separately)
-        await API.update("books", { book_id: existingBookId }, {
-          library_book_no: payload.p_library_book_no,
-          title:           payload.p_title,
-          author:          payload.p_author,
-          category:        payload.p_category,
-          almirah:         payload.p_almirah,
-          shelf:           payload.p_shelf
+        // update_book() Postgres function audits the change automatically
+        await API.updateBook(existingBookId, {
+          p_library_book_no: payload.p_library_book_no,
+          p_title:           payload.p_title,
+          p_author:          payload.p_author,
+          p_category:        payload.p_category,
+          p_almirah:         payload.p_almirah,
+          p_shelf:           payload.p_shelf
         });
-        // Add extra copies if requested
+        // Add extra copies if requested — also audited inside the function
         if (addExtra > 0) {
-          const book = ALL_BOOKS.find(x => x.book_id === existingBookId);
-          const startIdx = (Number(book.total_copies) || 0) + 1;
-          const newRows = [];
-          for (let i = 0; i < addExtra; i++) {
-            const copyId = `${existingBookId}-C${startIdx + i}`;
-            newRows.push({ copy_id: copyId, book_id: existingBookId, status: "Available" });
-          }
-          await sb.from("copies").insert(newRows);
-          // Update total_copies and available_copies on book
-          await API.update("books", { book_id: existingBookId }, {
-            total_copies: (Number(book.total_copies) || 0) + addExtra,
-            available_copies: (Number(book.available_copies) || 0) + addExtra
-          });
+          await API.addBookCopies(existingBookId, addExtra);
         }
       } else {
-        // Add new book (atomic — creates book + N copies via Postgres function)
+        // add_book() Postgres function creates book + N copies + audits atomically
         await API.addBook(payload);
       }
       UI.hideLoading();
@@ -186,6 +174,7 @@ function openBookModal(existingBookId) {
       close();
       loadBooks();
       if (window.loadDashboard) loadDashboard();
+      if (window.loadAudit) loadAudit();
     } catch (err) {
       UI.hideLoading();
       UI.toast(err.message || "Save failed", "error");
@@ -196,7 +185,7 @@ function openBookModal(existingBookId) {
 async function deleteBook(bookId) {
   const b = ALL_BOOKS.find(x => x.book_id === bookId);
   if (!b) return;
-  // Check for borrowed copies
+  // Pre-check borrowed copies (UX nicety; Postgres function re-checks server-side)
   if (Number(b.available_copies) < Number(b.total_copies)) {
     return UI.toast("Cannot delete: some copies are currently borrowed. Return them first.", "warning", 5000);
   }
@@ -204,11 +193,13 @@ async function deleteBook(bookId) {
   if (!ok) return;
   try {
     UI.showLoading("Deleting…");
-    await API.delete("books", { book_id: bookId }); // cascades to copies
+    // delete_book() Postgres function re-validates, cascades to copies, audits
+    await API.deleteBook(bookId);
     UI.hideLoading();
     UI.toast("Book deleted", "success");
     loadBooks();
     if (window.loadDashboard) loadDashboard();
+    if (window.loadAudit) loadAudit();
   } catch (err) {
     UI.hideLoading();
     UI.toast(err.message || "Delete failed", "error");

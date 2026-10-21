@@ -136,21 +136,23 @@ lms-web/
 │   ├── settings.js         ← Library rules form
 │   └── app.js              ← Section navigation
 ├── assets/
-│   └── logo.svg            ← Placeholder logo (replace with your own)
+│   └── logo.jpg            ← College logo (Mamukanjan badge)
 ├── sql/
-│   └── schema.sql          ← Run this once in Supabase SQL Editor
+│   ├── schema.sql          ← Run this once in Supabase SQL Editor
+│   └── schema-additions.sql  ← Run AFTER schema.sql (adds audit-enabled functions)
 └── .github/workflows/
     └── keep-alive.yml      ← Daily cron to ping Supabase
 ```
 
 ---
 
-## 🎨 Replacing the logo
+## 🎨 Logo
 
-The included `assets/logo.svg` is a placeholder. To use your own:
+The included `assets/logo.jpg` is the Govt. Graduate College Mamukanjan badge.
+To replace it with your own:
 
-1. Save your logo as `logo.svg` (or `logo.png`) in `assets/`
-2. If using `.png`, edit `index.html`, `login.html`, and `catalog.html` to change `logo.svg` → `logo.png`
+1. Save your logo as `logo.jpg` (or `.png`) in `assets/`
+2. If using a different filename, edit `index.html`, `login.html`, and `catalog.html` to update the `src=` of every `<img>` tag and the `href=` of the `<link rel="icon">` tag
 3. Recommended size: 64×64 px for the header
 4. Commit and push
 

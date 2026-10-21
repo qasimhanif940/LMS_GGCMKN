@@ -1,8 +1,10 @@
 /* =====================================================================
    circulation.js — Issue / Return / Renew via Postgres functions
+   NOTE: `selectedIssueStudent` is declared in students.js and shared.
+   Do NOT re-declare it here — duplicate let throws SyntaxError and
+   kills the whole script (which is why suggestions were not showing).
    ===================================================================== */
 
-let selectedIssueStudent = null;
 let selectedIssueBook = null;
 
 document.addEventListener("auth:ready", () => {

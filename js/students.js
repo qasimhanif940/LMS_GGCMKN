@@ -169,24 +169,38 @@ function openStudentModal(existingUserId) {
     if (!/^\d+$/.test(payload.roll_no)) return UI.toast("Roll No must be digits only", "warning");
     if (!payload.name) return UI.toast("Name is required", "warning");
 
-    // Uniqueness check (client-side; server enforces via unique constraint too)
+    // Uniqueness check (client-side; Postgres function re-checks too)
     const conflict = ALL_STUDENTS.find(x => String(x.roll_no) === payload.roll_no && x.user_id !== existingUserId);
     if (conflict) return UI.toast(`Roll No ${payload.roll_no} already exists (${conflict.user_id})`, "warning");
+
+    // Params for Postgres function (use p_ prefix to match SQL signature)
+    const rpcParams = {
+      p_roll_no: payload.roll_no,
+      p_name:    payload.name,
+      p_program: payload.program || null,
+      p_level:   payload.level || null,
+      p_gender:  payload.gender || null,
+      p_phone:   payload.phone || null,
+      p_email:   payload.email || null,
+      p_status:  payload.status
+    };
 
     try {
       UI.showLoading(isEdit ? "Saving…" : "Adding…");
       if (isEdit) {
-        await API.update("students", { user_id: existingUserId }, payload);
+        // update_student() Postgres function audits the change automatically
+        await API.updateStudent(existingUserId, rpcParams);
       } else {
-        const newId = await API.nextStudentId();
-        await API.insert("students", { ...payload, user_id: newId, registered_date: new Date().toISOString() });
+        // add_student() Postgres function audits + generates STU-XXX id
+        await API.addStudent(rpcParams);
       }
       UI.hideLoading();
       UI.toast(isEdit ? "Student updated" : "Student added", "success");
       close();
       loadStudents();
-      // Also reload dashboard counts
+      // Also reload dashboard counts + audit log
       if (window.loadDashboard) loadDashboard();
+      if (window.loadAudit) loadAudit();
     } catch (err) {
       UI.hideLoading();
       UI.toast(err.message || "Save failed", "error");
@@ -197,12 +211,12 @@ function openStudentModal(existingUserId) {
 async function deleteStudent(userId) {
   const s = ALL_STUDENTS.find(x => x.user_id === userId);
   if (!s) return;
-  // Check active borrows
+  // Pre-check active borrows (UX nicety; Postgres function re-checks server-side)
   const { data: active } = await sb.from("copies").select("copy_id").eq("current_borrower", userId).eq("status", "Borrowed");
   if (active && active.length) {
     return UI.toast(`Cannot delete: student has ${active.length} unreturned book(s). Return them first.`, "warning", 5000);
   }
-  // Check unpaid fines
+  // Pre-check unpaid fines
   const { data: unpaid } = await sb.from("fines").select("fine_id").eq("user_id", userId).eq("status", "Unpaid");
   if (unpaid && unpaid.length) {
     return UI.toast(`Cannot delete: student has ${unpaid.length} unpaid fine(s). Clear them first.`, "warning", 5000);
@@ -212,11 +226,13 @@ async function deleteStudent(userId) {
   if (!ok) return;
   try {
     UI.showLoading("Deleting…");
-    await API.delete("students", { user_id: userId });
+    // delete_student() Postgres function re-validates, deletes, and audits
+    await API.deleteStudent(userId);
     UI.hideLoading();
     UI.toast("Student deleted", "success");
     loadStudents();
     if (window.loadDashboard) loadDashboard();
+    if (window.loadAudit) loadAudit();
   } catch (err) {
     UI.hideLoading();
     UI.toast(err.message || "Delete failed", "error");

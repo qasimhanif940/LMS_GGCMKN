@@ -199,8 +199,23 @@ window.API = {
   // Student ID generation (calls Postgres function)
   async nextStudentId() { return this.rpc("next_student_id"); },
 
-  // Book add (calls Postgres function — atomic create book + N copies)
-  async addBook(payload) { return this.rpc("add_book", payload); },
+  // Student add / update / delete — all wrap Postgres functions so that
+  // every operation writes to audit_log atomically (see schema-additions.sql)
+  async addStudent(payload)        { return this.rpc("add_student", payload); },
+  async updateStudent(userId, payload) {
+    return this.rpc("update_student", { p_user_id: userId, ...payload });
+  },
+  async deleteStudent(userId)      { return this.rpc("delete_student", { p_user_id: userId }); },
+
+  // Book add / update / delete / add-copies — all wrap Postgres functions
+  async addBook(payload)           { return this.rpc("add_book", payload); },
+  async updateBook(bookId, payload) {
+    return this.rpc("update_book", { p_book_id: bookId, ...payload });
+  },
+  async deleteBook(bookId)         { return this.rpc("delete_book", { p_book_id: bookId }); },
+  async addBookCopies(bookId, count) {
+    return this.rpc("add_book_copies", { p_book_id: bookId, p_count: count });
+  },
 
   // Circulation (Postgres functions for atomicity)
   async borrowBook(userId, bookId) { return this.rpc("borrow_book", { p_user_id: userId, p_book_id: bookId }); },
