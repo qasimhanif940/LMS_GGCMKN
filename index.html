@@ -59,6 +59,27 @@
         <button class="btn secondary sm" id="btn-refresh-active">↻ Refresh</button>
       </div>
     </div>
+    <div class="card toolbar-card">
+      <div class="borrow-toolbar">
+        <div class="search-bar">
+          <input type="text" id="search-active" placeholder="Search by book, student, roll no, or copy ID…">
+        </div>
+        <select id="sort-active" class="form-control sort-select" aria-label="Sort active borrows">
+          <option value="due_asc">Due ↑ (soonest first)</option>
+          <option value="due_desc">Due ↓ (latest first)</option>
+          <option value="borrow_asc">Borrowed ↑</option>
+          <option value="borrow_desc">Borrowed ↓</option>
+          <option value="student_asc">Student A→Z</option>
+          <option value="book_asc">Book A→Z</option>
+        </select>
+      </div>
+      <div class="manual-return">
+        <span class="manual-label">Manual:</span>
+        <input type="text" id="return-copy-id" class="form-control" placeholder="Paste Copy ID e.g. BOOK-001-C1" autocomplete="off">
+        <button class="btn danger sm" id="btn-return-manual">Return</button>
+        <button class="btn secondary sm" id="btn-renew-manual">Renew</button>
+      </div>
+    </div>
     <div class="card" style="padding:0;">
       <div class="table-wrap">
         <table class="data" id="table-active">
@@ -159,18 +180,6 @@
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-header">↩️ Return / Renew (click on an active borrow above)</div>
-      <p class="text-muted" style="font-size:12px;">
-        To return or renew, click <strong>Return</strong> or <strong>Renew</strong> next to the borrow in the
-        Active Borrows table on the Dashboard. Or paste a Copy ID below:
-      </p>
-      <div class="flex gap-2 mt-2">
-        <input type="text" id="return-copy-id" class="form-control" placeholder="e.g. BOOK-001-C1">
-        <button class="btn danger" id="btn-return-manual">Return</button>
-        <button class="btn secondary" id="btn-renew-manual">Renew</button>
-      </div>
-    </div>
   </section>
 
   <!-- =========== FINES =========== -->

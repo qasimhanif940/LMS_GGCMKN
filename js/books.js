@@ -58,8 +58,10 @@ function renderBooks() {
         <td>${UI.escapeHtml(b.almirah || "—")}</td>
         <td>${UI.escapeHtml(b.shelf || "—")}</td>
         <td>
-          <button class="btn secondary sm" data-edit="${UI.escapeHtml(b.book_id)}">Edit</button>
-          <button class="btn danger sm" data-del="${UI.escapeHtml(b.book_id)}">Del</button>
+          <div class="row-actions">
+            <button class="btn secondary sm" data-edit="${UI.escapeHtml(b.book_id)}">Edit</button>
+            <button class="btn danger sm" data-del="${UI.escapeHtml(b.book_id)}">Del</button>
+          </div>
         </td>
       </tr>
     `;

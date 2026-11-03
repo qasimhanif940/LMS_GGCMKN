@@ -57,8 +57,10 @@ function renderStudents() {
         <td class="muted-cell">${UI.escapeHtml(s.phone || "—")}</td>
         <td>${statusBadge}</td>
         <td>
-          <button class="btn secondary sm" data-edit="${UI.escapeHtml(s.user_id)}">Edit</button>
-          <button class="btn danger sm" data-del="${UI.escapeHtml(s.user_id)}">Del</button>
+          <div class="row-actions">
+            <button class="btn secondary sm" data-edit="${UI.escapeHtml(s.user_id)}">Edit</button>
+            <button class="btn danger sm" data-del="${UI.escapeHtml(s.user_id)}">Del</button>
+          </div>
         </td>
       </tr>
     `;

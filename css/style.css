@@ -78,8 +78,14 @@ body {
   z-index: 50;
 }
 .app-header .brand { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
-.app-header .logo { width: 38px; height: 38px; flex-shrink: 0; }
-.app-header .logo img { width: 100%; height: 100%; object-fit: contain; }
+.app-header .logo {
+  width: 38px; height: 38px; flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.25);
+}
+.app-header .logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .app-header .titles { min-width: 0; flex: 1; }
 .app-header h1 {
   font-size: 16px;
@@ -424,7 +430,11 @@ table.data .clickable { cursor: pointer; color: var(--primary); text-decoration:
 .login-card .logo-wrap {
   display: flex; flex-direction: column; align-items: center; margin-bottom: 22px;
 }
-.login-card .logo-wrap img { width: 64px; height: 64px; margin-bottom: 12px; }
+.login-card .logo-wrap img {
+  width: 64px; height: 64px; margin-bottom: 12px;
+  border-radius: 50%; object-fit: cover;
+  box-shadow: 0 0 0 2px var(--border), var(--shadow);
+}
 .login-card .logo-wrap h1 { font-size: 19px; font-weight: 700; color: var(--primary-dark); text-align: center; }
 .login-card .logo-wrap p { font-size: 12px; color: var(--muted); margin-top: 4px; text-align: center; }
 .login-card .form-group { margin-bottom: 14px; }
@@ -619,3 +629,31 @@ table.data .clickable { cursor: pointer; color: var(--primary); text-decoration:
 .suggest-item:last-child { border-bottom: none; }
 .suggest-item:hover, .suggest-item.highlighted { background: var(--primary-50); }
 .suggest-item .small { color: var(--muted); font-size: 11px; margin-top: 1px; }
+
+/* ============ ROW ACTIONS (Edit/Del side-by-side, never wrap) ============ */
+.row-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+.row-actions .btn { flex: 0 0 auto; }
+
+/* ============ DASHBOARD BORROW TOOLBAR ============ */
+.toolbar-card { padding: 10px 12px; margin-bottom: 12px; }
+.borrow-toolbar {
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+}
+.borrow-toolbar .search-bar { flex: 1 1 220px; margin: 0; min-width: 160px; }
+.sort-select { width: auto; flex: 0 0 auto; padding: 9px 30px 9px 11px; }
+.manual-return {
+  display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+  margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border);
+}
+.manual-return .manual-label {
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap;
+}
+.manual-return .form-control { flex: 1 1 180px; min-width: 140px; }
+.manual-return .btn { flex: 0 0 auto; }
