@@ -151,7 +151,26 @@ function renderActiveBorrows() {
       const copyId = btn.dataset.copy;
       const action = btn.dataset.action;
       const verb = action === "return" ? "return" : "renew";
-      const ok = await UI.confirm(`Are you sure you want to ${verb} copy <strong>${UI.escapeHtml(copyId)}</strong>?`, `${verb} book`);
+
+      // Build confirm message. For Return action, include the book's
+      // Almirah + Shelf so the librarian knows where to physically
+      // place the copy back on the rack. Data is already in ACTIVE_BORROWS.
+      const borrow = ACTIVE_BORROWS.find(b => b.copy_id === copyId);
+      const book = (borrow && borrow.books) || {};
+      const placeBox = (book.almirah || book.shelf)
+        ? `<div style="margin-top:10px;padding:8px 10px;background:var(--accent-50);border:1px solid var(--accent-light);border-radius:8px;font-size:13px;">
+             <span style="font-weight:700;color:var(--primary-dark);">📍 Place at:</span>
+             <span style="margin-left:6px;">Almirah <strong>${UI.escapeHtml(book.almirah || "—")}</strong>, Shelf <strong>${UI.escapeHtml(book.shelf || "—")}</strong></span>
+           </div>`
+        : "";
+      const bookLine = book.title
+        ? `<div class="text-muted" style="font-size:12px;margin-top:4px;">${UI.escapeHtml(book.title)}</div>`
+        : "";
+      const msg = action === "return"
+        ? `<div style="text-align:left;">Return copy <strong>${UI.escapeHtml(copyId)}</strong>?${bookLine}${placeBox}</div>`
+        : `<div style="text-align:left;">Renew copy <strong>${UI.escapeHtml(copyId)}</strong>?${bookLine}</div>`;
+
+      const ok = await UI.confirm(msg, `${verb} book`);
       if (!ok) return;
       try {
         UI.showLoading(`${verb === "return" ? "Returning" : "Renewing"}…`);

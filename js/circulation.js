@@ -89,7 +89,32 @@ async function issueBook() {
 }
 
 async function doReturn(copyId) {
-  const ok = await UI.confirm(`Return copy <strong>${UI.escapeHtml(copyId)}</strong>?`);
+  // Look up the book's Almirah + Shelf so the librarian knows where
+  // to physically place the returned copy. Falls back to a plain
+  // confirm if the lookup fails (the actual return_book RPC will
+  // still validate the copy ID server-side).
+  let book = null;
+  try {
+    const { data, error } = await sb
+      .from("copies")
+      .select("copy_id, books(title, almirah, shelf)")
+      .eq("copy_id", copyId)
+      .single();
+    if (!error && data) book = data.books || null;
+  } catch (e) { /* ignore — fall back to basic confirm */ }
+
+  const placeBox = (book && (book.almirah || book.shelf))
+    ? `<div style="margin-top:10px;padding:8px 10px;background:var(--accent-50);border:1px solid var(--accent-light);border-radius:8px;font-size:13px;">
+         <span style="font-weight:700;color:var(--primary-dark);">📍 Place at:</span>
+         <span style="margin-left:6px;">Almirah <strong>${UI.escapeHtml(book.almirah || "—")}</strong>, Shelf <strong>${UI.escapeHtml(book.shelf || "—")}</strong></span>
+       </div>`
+    : "";
+  const bookLine = (book && book.title)
+    ? `<div class="text-muted" style="font-size:12px;margin-top:4px;">${UI.escapeHtml(book.title)}</div>`
+    : "";
+  const msg = `<div style="text-align:left;">Return copy <strong>${UI.escapeHtml(copyId)}</strong>?${bookLine}${placeBox}</div>`;
+
+  const ok = await UI.confirm(msg);
   if (!ok) return;
   try {
     UI.showLoading("Returning…");
